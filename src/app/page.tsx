@@ -98,7 +98,6 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
-      <button className="btn btn-primary">Hello World!</button>
     </div>
   );
 }
