@@ -23,10 +23,10 @@ export const Primary: Story = {
     },
 };
 
-export const Secondary: Story = {
+export const Outline: Story = {
     args: {
         text: 'Button',
-        variant: 'secondary',
+        outline: true,
         onClick: fn(),
     },
 };
@@ -43,14 +43,6 @@ export const Error: Story = {
     args: {
         text: 'Button',
         variant: 'error',
-        onClick: fn(),
-    },
-};
-
-export const Warning: Story = {
-    args: {
-        text: 'Button',
-        variant: 'warning',
         onClick: fn(),
     },
 };

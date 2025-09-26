@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { fn } from 'storybook/test';
-import Header from '../components/Header';
+import NavBar from '../components/NavBar';
 
 const meta = {
-  title: 'Example/Header',
-  component: Header,
+  title: 'Example/NavBar',
+  component: NavBar,
   parameters: {
     layout: 'fullscreen',
     backgrounds: {
@@ -19,7 +19,7 @@ const meta = {
     backgroundColor: { control: 'color' },
   },
   args: { onClick: fn() },
-} satisfies Meta<typeof Header>;
+} satisfies Meta<typeof NavBar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

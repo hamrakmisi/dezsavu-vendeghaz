@@ -4,10 +4,13 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./.storybook/preview.{js,ts}",
-    "./src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+    "./.storybook/**/*.{js,ts,jsx,tsx}",
+    "./stories/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: 'class',
+  safelist: [
+    { pattern: /^(btn|card|link|badge|input|modal|dropdown|toast)(-.+)?$/ },
+  ],
   theme: {
     extend: {
       colors: {
@@ -29,6 +32,14 @@ module.exports = {
           themeName: "dark",
           colorScheme: "dark",
         },
+        {
+          themeName: "custom",
+          colorScheme: "light",
+          prefersColorScheme: true,
+          colors: {
+            primary: "#F0A202",
+          },
+        }
       ],
     }),
   ],
