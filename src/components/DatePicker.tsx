@@ -107,7 +107,7 @@ export default function DatePicker({
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} className="w-8 h-8"></div>)
     }
-    
+
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
       const isSelected = selectedDate && isSameDay(date, selectedDate)
@@ -120,14 +120,14 @@ export default function DatePicker({
           onClick={() => handleDateSelect(day)}
           disabled={isDisabled}
           className={`
-            w-8 h-8 text-sm text-gray-500 rounded-md transition-all duration-200 hover:scale-105
-            ${isSelected 
+            w-8 h-8 text-sm rounded-md transition-all duration-200 hover:scale-105
+            ${isSelected
               ? 'bg-primary text-black font-bold'
                 : 'hover:bg-gray-100'
             }
             ${isDisabled
               ? 'text-gray-300 cursor-not-allowed hover:scale-100 hover:bg-transparent' 
-              : 'cursor-pointer'
+              : 'cursor-pointer text-gray-800'
             }
           `}
         >
