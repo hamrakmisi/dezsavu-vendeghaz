@@ -40,37 +40,41 @@ export default function ImageCarousel({
   }
 
   return (
-    <div className={`relative ${height} overflow-hidden rounded-lg ${className}`}>
+    <div className={`relative ${height} rounded-lg ${className}`}>
       {/* Image Container */}
-      <div 
-        className="flex transition-transform duration-1000 ease-in-out h-full"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-      >
-        {images.map((image, index) => (
-          <div
-            key={index}
-            className="w-full h-full flex-shrink-0 relative"
-          >
-            <img
-              src={image}
-              alt={`Carousel image ${index + 1}`}
-              className="w-full h-full object-cover"
-              loading={index === 0 ? 'eager' : 'lazy'}
-            />
-          </div>
-        ))}
+      <div className={`relative h-full rounded-lg overflow-clip`}>
+        <div 
+          className="flex transition-transform duration-1000 ease-in-out h-full"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="w-full h-full flex-shrink-0 relative"
+            >
+              <img
+                src={image}
+                alt={`Carousel image ${index + 1}`}
+                className="w-full h-full object-cover"
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Overlay Content */}
       {children && (
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          {children}
+        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+          <div className="pointer-events-auto">
+            {children}
+          </div>
         </div>
       )}
 
-      {/* Dots Indicator */}
+      {/* Dots Indicator*/}
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+        <div className="absolute bottom-4 right-4 flex space-x-2 z-20">
           {images.map((_, index) => (
             <button
               key={index}

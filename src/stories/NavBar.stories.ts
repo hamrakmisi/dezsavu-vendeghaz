@@ -3,7 +3,7 @@ import { fn } from 'storybook/test';
 import NavBar from '../components/NavBar';
 
 const meta = {
-  title: 'Example/NavBar',
+  title: 'Components/NavBar',
   component: NavBar,
   parameters: {
     layout: 'fullscreen',
