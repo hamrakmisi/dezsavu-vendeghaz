@@ -31,7 +31,7 @@ export default function NavBar() {
       {/* Desktop Navigation - hidden on mobile */}
       <div className='navbar-center hidden sm:flex'>
         <a className={itemClass}>
-          Galléria
+          Galéria
         </a>
         <a className={itemClass}>
           Rólunk
@@ -73,7 +73,7 @@ export default function NavBar() {
         <div className="sm:hidden absolute top-full left-0 right-0 mt-1 mx-[2.5%] w-[95%] bg-[rgb(var(--gray-1)/0.9)] backdrop-blur-sm rounded-lg shadow-lg z-50">
           <div className="flex flex-col p-4 space-y-2">
             <a className={`${itemClass} text-center py-2`}>
-              Galléria
+              Galéria
             </a>
             <a className={`${itemClass} text-center py-2`}>
               Rólunk
