@@ -1,20 +1,12 @@
 #!/usr/bin/env node
 
-/**
- * docker-cli.js
- * Usage:
- *   node docker-cli.js run      -> starts docker-compose and opens bash in the web container
- *   node docker-cli.js status   -> shows docker-compose ps
- *   node docker-cli.js down     -> stops containers
- *   node docker-cli.js logs     -> shows logs of the dev Next.js container
- */
-
-const { exec, spawn } = require("child_process");
+import { exec, spawn } from "child_process";
 
 const command = process.argv[2];
+const args = process.argv.slice(3);
 
 if (!command) {
-  console.log("Please provide a command: run | status | down | logs");
+  console.log("Please provide a command: run [--build] | status | down | logs");
   process.exit(1);
 }
 
@@ -23,9 +15,20 @@ const WEB_SERVICE_NAME = "web";
 
 switch (command) {
   case "run":
-    console.log("Starting docker-compose in detached mode...");
+    const shouldBuild = args.includes("--build");
+    
+    if (shouldBuild) {
+      console.log("Building and starting docker-compose in detached mode...");
+    } else {
+      console.log("Starting docker-compose in detached mode...");
+    }
 
-    const up = spawn("docker", ["compose", "-f", COMPOSE_FILE, "up", "-d"], { stdio: "inherit" });
+    const upArgs = ["compose", "-f", COMPOSE_FILE, "up", "-d"];
+    if (shouldBuild) {
+      upArgs.push("--build");
+    }
+
+    const up = spawn("docker", upArgs, { stdio: "inherit" });
 
     up.on("close", (code) => {
       if (code === 0) {
