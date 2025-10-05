@@ -56,17 +56,56 @@ async function runMigrations() {
     await connection.query(`USE \`${dbConfig.database}\``);
 
     await connection.query(`
+      CREATE TABLE IF NOT EXISTS roles (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE
+      )
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS statuses (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE
+      )
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS prices (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        value INT NOT NULL
+      )
+    `);
+
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) NOT NULL UNIQUE,
-        name VARCHAR(255),
-        phone VARCHAR(255),
-        role ENUM('admin', 'guest') DEFAULT 'guest',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        name VARCHAR(255) NOT NULL,
+        phone VARCHAR(15) NOT NULL,
+        roleId INT NOT NULL,
+        createdAt DATE NOT NULL,
+        updatedAt DATE NOT NULL,
+        FOREIGN KEY (roleId) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE
       )
     `);
-    console.log('Users table created/verified');
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS reservations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        userId INT NOT NULL,
+        nights INT NOT NULL,
+        \`from\` DATE NOT NULL,
+        \`to\` DATE NOT NULL,
+        statusId INT NOT NULL,
+        priceId INT NOT NULL,
+        total INT NOT NULL,
+        createdAt DATE NOT NULL,
+        updatedAt DATE NOT NULL,
+        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (statusId) REFERENCES statuses(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+        FOREIGN KEY (priceId) REFERENCES prices(id) ON DELETE RESTRICT ON UPDATE CASCADE
+      )
+    `);
 
     console.log('Database migrations completed successfully!');
     process.exit(0);
