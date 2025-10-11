@@ -23,7 +23,7 @@ export default function Button({ text, onClick, href, variant, outline, classNam
     }
   };
 
-  // If href is provided, render as Link
+
   if (href) {
     return (
       <Link href={href} className={buttonClass + ' ' + className}>
@@ -32,7 +32,6 @@ export default function Button({ text, onClick, href, variant, outline, classNam
     )
   }
 
-  // Otherwise render as button
   return (
     <button className={buttonClass + ' ' + className} onClick={handleClick}>{text}</button>
   )
