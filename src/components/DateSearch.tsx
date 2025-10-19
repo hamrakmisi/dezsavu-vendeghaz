@@ -10,12 +10,10 @@ export default function DateSearch({onSearch}: {onSearch: (checkInDate: Date | u
 
   const handleCheckInChange = (date: Date | undefined) => {
     setCheckInDate(date)
-    console.log(date)
   }
 
   const handleCheckOutChange = (date: Date | undefined) => {
     setCheckOutDate(date)
-    console.log(date)
   }
   return (
     <div className="flex flex-col gap-4">

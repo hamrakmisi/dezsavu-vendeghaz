@@ -54,7 +54,6 @@ export default function DateSelector({ checkInDate, checkOutDate, onDateClick }:
 
   function dateIsSelected(day: number, monthOffset: number) {
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
-    console.log(date, checkInDate, checkOutDate, 'dateIsSelected')
     return date.toDateString() === checkInDate?.toDateString() || date.toDateString() === checkOutDate?.toDateString()
   }
 
