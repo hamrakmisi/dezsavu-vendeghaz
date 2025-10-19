@@ -2,11 +2,15 @@
 
 import React, { useState } from 'react'
 
-export default function DateSelector() {
-  const [checkInDate, setCheckInDate] = useState<Date | undefined>(undefined)
-  const [checkOutDate, setCheckOutDate] = useState<Date | undefined>(undefined)
-  const [isCheckInDateSelected, setIsCheckInDateSelected] = useState(false)
+interface DateSelectorProps {
+  checkInDate: Date | undefined
+  checkOutDate: Date | undefined
+  onDateClick: (day: number, monthOffset: number, currentMonth: Date) => void
+}
+
+export default function DateSelector({ checkInDate, checkOutDate, onDateClick }: DateSelectorProps) {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date(new Date().setDate(1)))
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
 
   const monthNames = [
     'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
@@ -18,11 +22,9 @@ export default function DateSelector() {
 
   const days = ['H', 'K', 'Sz', 'Cs', 'P', 'Sz', 'V']
 
-  // Get the first day of the month (0 = Sunday, 1 = Monday, etc.)
   const getFirstDayOfMonth = (monthOffset: number) => {
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, 1)
     const day = date.getDay()
-    // Convert Sunday (0) to 6, and shift Monday (1) to 0
     return day === 0 ? 6 : day - 1
   }
 
@@ -39,6 +41,75 @@ export default function DateSelector() {
       }
       return newMonth
     })
+  }
+
+  const isDisabled = (day: number, monthOffset: number) => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
+    date.setHours(0, 0, 0, 0)
+    
+    return date <= today
+  }
+
+  function dateIsSelected(day: number, monthOffset: number) {
+    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
+    console.log(date, checkInDate, checkOutDate, 'dateIsSelected')
+    return date.toDateString() === checkInDate?.toDateString() || date.toDateString() === checkOutDate?.toDateString()
+  }
+
+  function dateIsBetween(day: number, monthOffset: number) {
+    if (!checkInDate || !checkOutDate) return false
+    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
+    return date.getTime() >= checkInDate.getTime() && date.getTime() <= checkOutDate.getTime()
+  }
+
+  function onMouseHover(day: number, monthOffset: number) {
+    setHoveredDate(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day))
+  }
+
+  function shouldShowPreviewRange(day: number, monthOffset: number): boolean {
+    if (!checkInDate || !hoveredDate || checkOutDate) return false
+    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
+    return date > checkInDate && date <= hoveredDate
+  }
+
+  function renderCalendar(daysOffset: number, daysInMonth: number, monthOffset: number) {
+    return (
+      <div className="flex flex-col mx-auto">
+        <div className="grid grid-cols-7 gap-1 mb-2">
+          {days.map((day, index) => (
+            <div key={index} className="w-8 h-8 flex items-center justify-center text-sm font-medium text-gray-700">{day}</div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7 gap-1">
+          {Array.from({ length: daysOffset }).map((_, i) => (
+            <div key={`empty-${i}`} className="w-8 h-8"></div>
+          ))}
+          {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
+            const disabled = isDisabled(day, monthOffset)
+            return (
+              <div
+                key={day}
+                className={`w-8 h-8 flex items-center justify-center text-sm font-medium ${
+                  disabled
+                    ? 'text-gray-300 cursor-not-allowed line-through'
+                    : dateIsSelected(day, monthOffset)
+                      ? 'text-gray-700 cursor-pointer bg-[#F0A202] rounded'
+                      : dateIsBetween(day, monthOffset) || shouldShowPreviewRange(day, monthOffset)
+                        ? 'text-gray-700 cursor-pointer bg-orange-100 rounded'
+                        : 'text-gray-700 cursor-pointer hover:bg-orange-100 rounded'
+                }`}
+                onClick={() => onDateClick(day, monthOffset, currentMonth)}
+                onMouseOver={() => onMouseHover(day, monthOffset)}
+              >
+                {day}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -76,37 +147,9 @@ export default function DateSelector() {
             </svg>
           </button>
         </div>
-        <div className="flex items-start justify-between w-[80%] gap-8">
-          <div className="flex flex-col">
-            <div className="grid grid-cols-7 gap-1 mb-2">
-              {days.map((day, index) => (
-                <div key={index} className="w-8 h-8 flex items-center justify-center text-sm font-medium text-gray-500">{day}</div>
-              ))}
-            </div>
-            <div className="grid grid-cols-7 gap-1">
-              {Array.from({ length: firstDayOffset1 }).map((_, i) => (
-                <div key={`empty-${i}`} className="w-8 h-8"></div>
-              ))}
-              {Array.from({ length: daysInMonth1 }, (_, i) => i + 1).map((day) => (
-                <div key={day} className="w-8 h-8 flex items-center justify-center text-sm font-medium text-gray-500">{day}</div>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <div className="grid grid-cols-7 gap-1 mb-2">
-              {days.map((day, index) => (
-                <div key={index} className="w-8 h-8 flex items-center justify-center text-sm font-medium text-gray-500">{day}</div>
-              ))}
-            </div>
-            <div className="grid grid-cols-7 gap-1">
-              {Array.from({ length: firstDayOffset2 }).map((_, i) => (
-                <div key={`empty-${i}`} className="w-8 h-8"></div>
-              ))}
-              {Array.from({ length: daysInMonth2 }, (_, i) => i + 1).map((day) => (
-                <div key={day} className="w-8 h-8 flex items-center justify-center text-sm font-medium text-gray-500">{day}</div>
-              ))}
-            </div>
-          </div>
+        <div className="flex flex-col md:flex-row flex-wrap md:content-normal items-start justify-between w-[80%] gap-8">
+          {renderCalendar(firstDayOffset1, daysInMonth1, 0)}
+          {renderCalendar(firstDayOffset2, daysInMonth2, 1)}
         </div>
       </div>
     </div>
