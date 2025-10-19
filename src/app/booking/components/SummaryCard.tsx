@@ -2,11 +2,12 @@ import Button from '@/components/Button'
 import React from 'react'
 
 interface SummaryCardProps {
-    checkInDate: Date | undefined
-    checkOutDate: Date | undefined
+  checkInDate: Date | undefined
+  checkOutDate: Date | undefined
+  onBookingClick: () => void
 }
 
-export default function SummaryCard({ checkInDate, checkOutDate }: SummaryCardProps) {
+export default function SummaryCard({ checkInDate, checkOutDate, onBookingClick }: SummaryCardProps) {
   const nights = checkInDate && checkOutDate ? checkOutDate.getDate() - checkInDate.getDate() : 0
   const pricePerNight = 22500 //TODO: price per night
   const price = nights * pricePerNight
@@ -28,10 +29,6 @@ export default function SummaryCard({ checkInDate, checkOutDate }: SummaryCardPr
     const dateStr = date.toLocaleDateString('hu-HU')
     
     return `${dateStr} (${dayOfWeek})`
-  }
-
-  function onBooking() {
-    //TODO: booking
   }
 
   return (
@@ -74,7 +71,7 @@ export default function SummaryCard({ checkInDate, checkOutDate }: SummaryCardPr
         </div>
         <Button
           text='Foglalás'
-          onClick={onBooking}
+          onClick={onBookingClick}
           variant='primary'
           className='text-lg font-bold'
         />

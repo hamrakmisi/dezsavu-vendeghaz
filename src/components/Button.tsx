@@ -16,7 +16,7 @@ export default function Button({ text, onClick, href, variant, outline, classNam
   if (outline && !variant) {
     variant = 'primary';
   }
-  const buttonClass = `btn ${outline ? `btn-outline-${variant}` : variant ? `btn-${variant}` : ''}`;
+  const buttonClass = `btn ${outline ? `btn-outline-${variant}` : variant ? `btn-${variant}` : ''} hover:scale-105 transition-transform duration-200`;
   const handleClick = () => {
     if (onClick) {
       onClick();
