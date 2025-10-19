@@ -59,17 +59,17 @@ export default function SummaryCard({ checkInDate, checkOutDate }: SummaryCardPr
               {nights ? nights : ''}
             </div>
           </div>
+          <div className="italic text-gray-400">
+              {pricePerNight.toLocaleString('hu-HU', { style: 'currency', currency: 'HUF' })}/éjszaka
+          </div>
         </div>
       </div>
       <hr className="my-3 border-gray-400 border-1.5" />
       <div className="flex flex-col gap-2 basis-1/3">
         <div className="flex font-bold flex-1">
           Összesen:
-          <div className="ml-2 font-normal flex flex-col">
+          <div className="ml-2 font-normal">
             {formatPrice(price)}
-            <div className="ml-2 italic text-gray-400">
-              {pricePerNight.toLocaleString('hu-HU', { style: 'currency', currency: 'HUF' })}/éjszaka
-            </div>
           </div>
         </div>
         <Button
