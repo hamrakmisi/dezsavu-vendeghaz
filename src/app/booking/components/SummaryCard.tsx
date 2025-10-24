@@ -70,6 +70,7 @@ export default function SummaryCard({ checkInDate, checkOutDate, onBookingClick 
           </div>
         </div>
         <Button
+          disabled={!checkInDate || !checkOutDate}
           text='Foglalás'
           onClick={onBookingClick}
           variant='primary'

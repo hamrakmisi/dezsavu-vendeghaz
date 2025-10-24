@@ -10,9 +10,10 @@ export interface ButtonProps {
     variant?: 'primary' | 'secondary' | 'success' | 'error' | 'warning';
     outline?: boolean;
     className?: string;
+    disabled?: boolean;
 }
 
-export default function Button({ text, onClick, href, variant, outline, className }: ButtonProps) {
+export default function Button({ text, onClick, href, variant, outline, className, disabled = false }: ButtonProps) {
   if (outline && !variant) {
     variant = 'primary';
   }
@@ -33,6 +34,6 @@ export default function Button({ text, onClick, href, variant, outline, classNam
   }
 
   return (
-    <button className={buttonClass + ' ' + className} onClick={handleClick}>{text}</button>
+    <button disabled={disabled} className={buttonClass + ' ' + className} onClick={handleClick}>{text}</button>
   )
 }
