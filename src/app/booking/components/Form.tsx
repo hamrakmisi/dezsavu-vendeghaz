@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import TermsAndConditionsModal from './TermsAndConditionsModal'
-import { GuestInfo, ErrorInfo } from './FormModal'
+import { ErrorInfo } from './FormModal'
+import { GuestInfo } from "./BookingSummary";
 
 interface FormProps {
   guestInfo: GuestInfo

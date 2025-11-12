@@ -2,8 +2,13 @@ export function calculateNights(checkInDate: Date, checkOutDate: Date) {
   return checkOutDate.getDate() - checkInDate.getDate()
 }
 
-export function calculateTotalPrice(nights: number) {
-  return {totalPrice: nights * 22500, pricePerNight: 22500}; //TODO: price per night
+export function calculateTotalPrice(nights: number, pricePerNight: number, discount: number | null) {
+  if (!nights || !pricePerNight) return { totalPrice: null, discountAmount: null, finalPrice: null };
+  const totalPrice = nights * pricePerNight;
+  const discountAmount = discount ? totalPrice * (discount / 100) : null;
+  const finalPrice = discountAmount ? totalPrice - discountAmount : totalPrice;
+
+  return { totalPrice, discountAmount, finalPrice };
 }
 
 export function toLocalISOString(date: Date): string {

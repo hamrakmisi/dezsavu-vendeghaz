@@ -79,7 +79,8 @@ async function runMigrations() {
     await connection.query(`
       CREATE TABLE IF NOT EXISTS discounts (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        value INT NOT NULL
+        value INT NOT NULL,
+        code VARCHAR(255) NOT NULL UNIQUE
       )
     `);
 
@@ -115,11 +116,13 @@ async function runMigrations() {
     `);
 
     await connection.query(`
-      INSERT INTO price (value) VALUES (22500)
+      INSERT IGNORE INTO price (value)
+      SELECT 22500 WHERE NOT EXISTS (SELECT 1 FROM price WHERE id = 1)
     `);
 
     await connection.query(`
-      INSERT INTO discounts (value) VALUES (10)
+      INSERT IGNORE INTO discounts (value, code)
+      SELECT 10, 'TEN' WHERE NOT EXISTS (SELECT 1 FROM discounts WHERE value = 10 AND code = 'TEN')
     `);
 
     const insertIfNotExists = async (table, values) => {
@@ -132,7 +135,7 @@ async function runMigrations() {
     };
 
     await insertIfNotExists('roles', ['guest', 'admin']);
-    
+
     await insertIfNotExists('statuses', ['pending', 'upcoming', 'completed', 'cancelled']);
 
     console.log('Database migrations completed successfully!');

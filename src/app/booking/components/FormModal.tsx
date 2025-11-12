@@ -90,7 +90,14 @@ export default function FormModal({open, setOpen, reserveBooking, isLoading, gue
           />
           <div className="flex gap-3 justify-end">
             <Button text="Mégsem" onClick={() => setOpen(!open)}/>
-            <Button text="Tovább a fizetéshez" onClick={handleContinueClick} variant="primary" className="font-bold" isLoading={isLoading}/>
+            <Button
+              text="Tovább a fizetéshez"
+              onClick={handleContinueClick}
+              variant="primary"
+              className="font-bold"
+              isLoading={isLoading}
+              disabled={isLoading}
+            />
           </div>
         </div>
       </div>
