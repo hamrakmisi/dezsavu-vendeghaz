@@ -70,7 +70,14 @@ async function runMigrations() {
     `);
 
     await connection.query(`
-      CREATE TABLE IF NOT EXISTS prices (
+      CREATE TABLE IF NOT EXISTS price (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        value INT NOT NULL
+      )
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS discounts (
         id INT AUTO_INCREMENT PRIMARY KEY,
         value INT NOT NULL
       )
@@ -83,8 +90,8 @@ async function runMigrations() {
         name VARCHAR(255) NOT NULL,
         phone VARCHAR(15) NOT NULL,
         roleId INT NOT NULL,
-        createdAt DATE NOT NULL,
-        updatedAt DATE NOT NULL,
+        createdAt TIMESTAMP NOT NULL,
+        updatedAt TIMESTAMP NOT NULL,
         FOREIGN KEY (roleId) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE
       )
     `);
@@ -94,30 +101,49 @@ async function runMigrations() {
         id INT AUTO_INCREMENT PRIMARY KEY,
         userId INT NOT NULL,
         nights INT NOT NULL,
-        \`from\` DATE NOT NULL,
-        \`to\` DATE NOT NULL,
+        checkInDate DATE NOT NULL,
+        checkOutDate DATE NOT NULL,
         statusId INT NOT NULL,
-        priceId INT NOT NULL,
+        discountId INT NULL,
         total INT NOT NULL,
-        createdAt DATE NOT NULL,
-        updatedAt DATE NOT NULL,
+        createdAt TIMESTAMP NOT NULL,
+        updatedAt TIMESTAMP NOT NULL,
         FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (statusId) REFERENCES statuses(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-        FOREIGN KEY (priceId) REFERENCES prices(id) ON DELETE RESTRICT ON UPDATE CASCADE
+        FOREIGN KEY (discountId) REFERENCES discounts(id) ON DELETE RESTRICT ON UPDATE CASCADE
       )
     `);
 
-    console.log('Database migrations completed successfully!');
-    process.exit(0);
+    await connection.query(`
+      INSERT INTO price (value) VALUES (22500)
+    `);
 
+    await connection.query(`
+      INSERT INTO discounts (value) VALUES (10)
+    `);
+
+    const insertIfNotExists = async (table, values) => {
+      for (const value of values) {
+        await connection.query(`
+          INSERT IGNORE INTO ${table} (name)
+          SELECT ? WHERE NOT EXISTS (SELECT 1 FROM ${table} WHERE name = ?)
+        `, [value, value]);
+      }
+    };
+
+    await insertIfNotExists('roles', ['guest', 'admin']);
+    
+    await insertIfNotExists('statuses', ['pending', 'upcoming', 'completed', 'cancelled']);
+
+    console.log('Database migrations completed successfully!');
+
+    await connection.end();
+    process.exit(0);
   } catch (error) {
     console.error('Migration failed:', error.message);
     console.error('Stack trace:', error.stack);
+    await connection.end();
     process.exit(1);
-  } finally {
-    if (connection) {
-      await connection.end();
-    }
   }
 }
 
