@@ -1,5 +1,6 @@
 import Button from '@/components/Button'
-import React from 'react'
+import React, { useMemo } from 'react'
+import { calculateNights, calculateTotalPrice } from '@/lib/helper'
 
 interface SummaryCardProps {
   checkInDate: Date | undefined
@@ -8,9 +9,14 @@ interface SummaryCardProps {
 }
 
 export default function SummaryCard({ checkInDate, checkOutDate, onBookingClick }: SummaryCardProps) {
-  const nights = checkInDate && checkOutDate ? checkOutDate.getDate() - checkInDate.getDate() : 0
-  const pricePerNight = 22500 //TODO: price per night
-  const price = nights * pricePerNight
+  const nights = useMemo(() => {
+    if (!checkInDate || !checkOutDate) {
+      return 0
+    }
+    
+    return calculateNights(checkInDate, checkOutDate)
+  }, [checkInDate, checkOutDate])
+  const { totalPrice, pricePerNight } = useMemo(() => calculateTotalPrice(nights), [nights])
 
   function formatPrice(price: number) {
     if (!price) {
@@ -66,7 +72,7 @@ export default function SummaryCard({ checkInDate, checkOutDate, onBookingClick 
         <div className="flex font-bold flex-1">
           Összesen:
           <div className="ml-2 font-normal">
-            {formatPrice(price)}
+            {formatPrice(totalPrice)}
           </div>
         </div>
         <Button

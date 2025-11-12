@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import Form from './Form'
 import Button from '@/components/Button'
+import { GuestInfo } from './BookingSummary'
 
 interface FormModalProps {
   open: boolean
   setOpen: (open: boolean) => void
-}
-
-export interface GuestInfo {
-  name: string;
-  email: string;
-  phone: string;
+  reserveBooking: () => void
+  isLoading: boolean
+  guestInfo: GuestInfo
+  setGuestInfo: (guestInfo: GuestInfo) => void
 }
 
 export interface ErrorInfo {
@@ -20,13 +19,8 @@ export interface ErrorInfo {
   termsAndConditionsChecked: boolean | null;
 }
 
-export default function FormModal({open, setOpen}: FormModalProps) {
+export default function FormModal({open, setOpen, reserveBooking, isLoading, guestInfo, setGuestInfo}: FormModalProps) {
   const [termsAndConditionsChecked, setTermsAndConditionsChecked] = useState(false)
-  const [guestInfo, setGuestInfo] = useState<GuestInfo>({
-    name: '',
-    email: '',
-    phone: '',
-  })
   const [errors, setErrors] = useState<ErrorInfo>({
     name: null,
     email: null,
@@ -71,6 +65,12 @@ export default function FormModal({open, setOpen}: FormModalProps) {
 
   function handleContinueClick() {
     validate()
+    
+    if (errors.name || errors.email || errors.phone || !errors.termsAndConditionsChecked) {
+      return
+    }
+    
+    reserveBooking()
   }
   
   return (
@@ -90,7 +90,7 @@ export default function FormModal({open, setOpen}: FormModalProps) {
           />
           <div className="flex gap-3 justify-end">
             <Button text="Mégsem" onClick={() => setOpen(!open)}/>
-            <Button text="Tovább a fizetéshez" onClick={handleContinueClick} variant="primary" className="font-bold"/>
+            <Button text="Tovább a fizetéshez" onClick={handleContinueClick} variant="primary" className="font-bold" isLoading={isLoading}/>
           </div>
         </div>
       </div>

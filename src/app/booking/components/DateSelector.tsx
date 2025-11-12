@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Calendar from './Calendar'
 
 interface DateSelectorProps {
   checkInDate: Date | undefined
@@ -9,7 +10,7 @@ interface DateSelectorProps {
 }
 
 export default function DateSelector({ checkInDate, checkOutDate, onDateClick }: DateSelectorProps) {
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(new Date().setDate(1)))
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
 
   const monthNames = [
@@ -41,74 +42,6 @@ export default function DateSelector({ checkInDate, checkOutDate, onDateClick }:
       }
       return newMonth
     })
-  }
-
-  const isDisabled = (day: number, monthOffset: number) => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
-    date.setHours(0, 0, 0, 0)
-    
-    return date <= today
-  }
-
-  function dateIsSelected(day: number, monthOffset: number) {
-    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
-    return date.toDateString() === checkInDate?.toDateString() || date.toDateString() === checkOutDate?.toDateString()
-  }
-
-  function dateIsBetween(day: number, monthOffset: number) {
-    if (!checkInDate || !checkOutDate) return false
-    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
-    return date.getTime() >= checkInDate.getTime() && date.getTime() <= checkOutDate.getTime()
-  }
-
-  function onMouseHover(day: number, monthOffset: number) {
-    setHoveredDate(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day))
-  }
-
-  function shouldShowPreviewRange(day: number, monthOffset: number): boolean {
-    if (!checkInDate || !hoveredDate || checkOutDate) return false
-    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
-    return date > checkInDate && date <= hoveredDate
-  }
-
-  function renderCalendar(daysOffset: number, daysInMonth: number, monthOffset: number) {
-    return (
-      <div className="flex flex-col mx-auto">
-        <div className="grid grid-cols-7 gap-1 mb-2">
-          {days.map((day, index) => (
-            <div key={index} className="w-8 h-8 flex items-center justify-center text-sm font-medium text-gray-700">{day}</div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7 gap-1">
-          {Array.from({ length: daysOffset }).map((_, i) => (
-            <div key={`empty-${i}`} className="w-8 h-8"></div>
-          ))}
-          {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
-            const disabled = isDisabled(day, monthOffset)
-            return (
-              <div
-                key={day}
-                className={`w-8 h-8 flex items-center justify-center text-sm font-medium ${
-                  disabled
-                    ? 'text-gray-300 cursor-not-allowed line-through'
-                    : dateIsSelected(day, monthOffset)
-                      ? 'text-gray-700 cursor-pointer bg-[#F0A202] rounded'
-                      : dateIsBetween(day, monthOffset) || shouldShowPreviewRange(day, monthOffset)
-                        ? 'text-gray-700 cursor-pointer bg-orange-100 rounded'
-                        : 'text-gray-700 cursor-pointer hover:bg-orange-100 rounded'
-                }`}
-                onClick={() => onDateClick(day, monthOffset, currentMonth)}
-                onMouseOver={() => onMouseHover(day, monthOffset)}
-              >
-                {day}
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -147,8 +80,30 @@ export default function DateSelector({ checkInDate, checkOutDate, onDateClick }:
           </button>
         </div>
         <div className="flex flex-col md:flex-row flex-wrap md:content-normal items-start justify-between w-[80%] gap-8">
-          {renderCalendar(firstDayOffset1, daysInMonth1, 0)}
-          {renderCalendar(firstDayOffset2, daysInMonth2, 1)}
+          <Calendar
+            days={days}
+            daysOffset={firstDayOffset1}
+            daysInMonth={daysInMonth1}
+            monthOffset={0}
+            checkInDate={checkInDate}
+            checkOutDate={checkOutDate}
+            currentMonth={currentMonth}
+            onDateClick={onDateClick}
+            hoveredDate={hoveredDate}
+            setHoveredDate={setHoveredDate}
+          />
+          <Calendar
+            days={days}
+            daysOffset={firstDayOffset2}
+            daysInMonth={daysInMonth2}
+            monthOffset={1}
+            checkInDate={checkInDate}
+            checkOutDate={checkOutDate}
+            currentMonth={currentMonth}
+            onDateClick={onDateClick}
+            hoveredDate={hoveredDate}
+            setHoveredDate={setHoveredDate}
+          />
         </div>
       </div>
     </div>

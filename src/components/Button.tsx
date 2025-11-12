@@ -2,18 +2,20 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Loader from './Loader'
 
 export interface ButtonProps {
-    text: string;
-    onClick?: () => void;
-    href?: string;
-    variant?: 'primary' | 'secondary' | 'success' | 'error' | 'warning';
-    outline?: boolean;
-    className?: string;
-    disabled?: boolean;
+  text: string;
+  onClick?: () => void;
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'success' | 'error' | 'warning';
+  outline?: boolean;
+  className?: string;
+  disabled?: boolean;
+  isLoading?: boolean;
 }
 
-export default function Button({ text, onClick, href, variant, outline, className, disabled = false }: ButtonProps) {
+export default function Button({ text, onClick, href, variant, outline, className, disabled = false, isLoading = false }: ButtonProps) {
   if (outline && !variant) {
     variant = 'primary';
   }
@@ -34,6 +36,8 @@ export default function Button({ text, onClick, href, variant, outline, classNam
   }
 
   return (
-    <button disabled={disabled} className={buttonClass + ' ' + className} onClick={handleClick}>{text}</button>
+    <button disabled={disabled} className={buttonClass + ' ' + className} onClick={handleClick}>
+      {isLoading ? <Loader color='white' /> : text}
+    </button>
   )
 }
