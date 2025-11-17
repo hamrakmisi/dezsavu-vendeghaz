@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Button from './Button'
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const router = useRouter()
   
   const itemClass = `
     navbar-item hover:scale-105
@@ -13,6 +15,10 @@ export default function NavBar() {
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
+  }
+
+  const onBookingClick = () => {
+    router.push('/booking')
   }
   
   return (
@@ -23,7 +29,7 @@ export default function NavBar() {
           bg-[rgb(var(--gray-1)/0.1)] hover:bg-[rgb(var(--gray-1)/0.3)] transition-colors
         `}>
       <div className='navbar-start'>
-        <a className={`${itemClass} font-bold sm:text-xl md:text-md uppercase`}>
+        <a className={`${itemClass} font-bold sm:text-xl md:text-md uppercase`} href="/">
           Dézsavű Vendégház
         </a>
       </div>
@@ -43,9 +49,9 @@ export default function NavBar() {
       
       <div className={`navbar-end`}>
         {/* Desktop Book Now button - hidden on mobile */}
-        <a className={`${itemClass} hidden sm:block`}>
-          <Button text="Foglalás" variant="primary" className="uppercase font-bold"/>
-        </a>
+        <div className={`${itemClass} hidden sm:block`}>
+          <Button text="Foglalás" variant="primary" className="uppercase font-bold" href="/booking"/>
+        </div>
         
         {/* Hamburger menu button - visible only on mobile */}
         <button 
@@ -82,7 +88,7 @@ export default function NavBar() {
               Elérhetőségek
             </a>
             <div className="pt-2 border-t border-gray-300">
-              <Button text="Foglalás" variant="primary" className="uppercase font-bold w-full"/>
+              <Button text="Foglalás" variant="primary" className="uppercase font-bold w-full" href="/booking"/>
             </div>
           </div>
         </div>

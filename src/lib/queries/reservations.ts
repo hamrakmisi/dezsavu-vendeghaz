@@ -1,0 +1,56 @@
+'use server'
+
+import { RowDataPacket } from 'mysql2';
+import pool from "../pool";
+
+export interface Reservation {
+  id?: number;
+  userId?: number;
+  nights: number;
+  checkInDate: Date;
+  checkOutDate: Date;
+  statusId: number;
+  discountId: number | null;
+  total: number;
+}
+
+export async function insertReservation(reservation: Reservation) {
+  await pool.query(`
+    INSERT INTO reservations (userId, nights, checkInDate, checkOutDate, statusId, discountId, total, createdAt, updatedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+  `,
+  [
+    reservation.userId,
+    reservation.nights,
+    reservation.checkInDate,
+    reservation.checkOutDate,
+    reservation.statusId,
+    reservation.discountId,
+    reservation.total
+  ]
+  );
+}
+
+export async function getReservationsByDateRange(from: Date, to: Date): Promise<Reservation[]> {
+  const [rows] = await pool.query<RowDataPacket[]>(`
+    SELECT * FROM reservations
+    WHERE (checkInDate <= ? AND checkOutDate >= ?)
+    OR (checkInDate BETWEEN ? AND ?)
+    OR (checkOutDate BETWEEN ? AND ?)
+  `, [from, to, from, to, from, to]);
+  return rows.map((row: RowDataPacket) => ({
+    id: row.id,
+    userId: row.userId,
+    nights: row.nights,
+    checkInDate: row.checkInDate,
+    checkOutDate: row.checkOutDate,
+    statusId: row.statusId,
+    discountId: row.discountId,
+    total: row.total,
+  }));
+}
+
+export async function updateReservation(reservation: Reservation) {
+  //TODO
+}
+
