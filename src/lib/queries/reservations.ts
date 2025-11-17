@@ -2,6 +2,7 @@
 
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import pool from "../pool";
+import { BookingStatus } from "../types";
 
 export interface Reservation {
   id?: number;
@@ -67,7 +68,11 @@ export async function getReservationById(id: number): Promise<Reservation> {
   }))[0];
 }
 
-export async function updateReservation(reservation: Reservation) {
-  //TODO
+export async function updateReservationStatus(reservationId: number, statusId: BookingStatus) {
+  await pool.query<ResultSetHeader>(`
+    UPDATE reservations
+    SET statusId = ?
+    WHERE id = ?
+  `, [statusId, reservationId]);
 }
 

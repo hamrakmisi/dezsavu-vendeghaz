@@ -1,10 +1,13 @@
+'use server'
 import { redirect } from 'next/navigation'
 
 import { stripe } from '../../lib/stripe'
 import Button from '@/components/Button';
+import { updateReservationStatus } from '@/lib/queries/reservations';
+import { BookingStatus } from '@/lib/types';
 
 export default async function Return({ searchParams }: { searchParams: any }) {
-  const { session_id } = await searchParams
+  const { session_id, reservationId } = await searchParams
 
   if (!session_id)
     throw new Error('Please provide a valid session_id (`cs_test_...`)')
@@ -23,6 +26,7 @@ export default async function Return({ searchParams }: { searchParams: any }) {
   }
 
   if (status === 'complete') {
+    await updateReservationStatus(Number(reservationId), BookingStatus.UPCOMING)
     return (
       <section id="success" className="w-[95%] h-[calc(100vh-20vh)] mx-auto pt-64 flex flex-col items-center gap-4">
         <p className="text-center">

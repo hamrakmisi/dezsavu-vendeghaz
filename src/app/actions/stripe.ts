@@ -30,7 +30,7 @@ export async function fetchClientSecret(reservationId: number): Promise<string> 
       }
     ],
     mode: 'payment',
-    return_url: `${origin}/return?session_id={CHECKOUT_SESSION_ID}`,
+    return_url: `${origin}/return?session_id={CHECKOUT_SESSION_ID}&reservationId=${reservationId}`,
     locale: 'hu'
   })
 
