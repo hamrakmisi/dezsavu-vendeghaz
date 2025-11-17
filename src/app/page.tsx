@@ -1,6 +1,5 @@
-import Image from "next/image";
 import ImageCarousel from "@/components/ImageCarousel";
-import SearchCard from "@/components/SearchCard";
+import BookingCard from "@/components/BookingCard";
 import Map from "@/components/Map";
 
 export default function Home() {
@@ -19,7 +18,7 @@ export default function Home() {
           height="h-[90vh]"
           className="w-full"
         >
-          <SearchCard />
+          <BookingCard />
         </ImageCarousel>
       </section>
       <Map />
