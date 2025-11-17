@@ -1,5 +1,5 @@
 import Button from '@/components/Button'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 interface DiscountModalProps {
   open: boolean

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Reservation } from '@/lib/queries/reservations';
 
 interface CalendarProps {
@@ -93,8 +93,6 @@ export default function Calendar({
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-      
-      
 
       return await response.json();
     } catch (error) {

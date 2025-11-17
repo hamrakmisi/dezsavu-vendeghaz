@@ -8,13 +8,13 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     
-    await createBooking(body)
+    const reservationId = await createBooking(body)
     
     return NextResponse.json(
       { 
         success: true,
         message: 'Foglalás sikeresen rögzítve!',
-        data: body
+        data: reservationId
       },
       { status: 200 }
     );

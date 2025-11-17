@@ -1,5 +1,3 @@
-import React from 'react'
-
 interface TermsAndConditionsModalProps {
   open: boolean
   setOpen: (open: boolean) => void

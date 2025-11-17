@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { stripe } from '../../lib/stripe'
+import Button from '@/components/Button';
 
 export default async function Return({ searchParams }: { searchParams: any }) {
   const { session_id } = await searchParams
@@ -23,12 +24,17 @@ export default async function Return({ searchParams }: { searchParams: any }) {
 
   if (status === 'complete') {
     return (
-      <section id="success">
-        <p>
-          We appreciate your business! A confirmation email will be sent to{' '}
-          {customerEmail}. If you have any questions, please email{' '}
+      <section id="success" className="w-[95%] h-[calc(100vh-20vh)] mx-auto pt-64 flex flex-col items-center gap-4">
+        <p className="text-center">
+          Köszönjük hogy minket választott! A foglalásod megerősítését nemsokára a(z){' '}
+          {customerEmail} email címre küldjük. Ha bármilyen kérdésed van, kérlek keress minket{' '}
+          <a href="mailto:vendeghaz.dezsavu@gmail.com">vendeghaz.dezsavu@gmail.com</a>-on.
         </p>
-        <a href="mailto:orders@example.com">orders@example.com</a>.
+        <Button
+          text="Vissza a főoldalra"
+          variant="primary"
+          href="/"
+        />
       </section>
     )
   }

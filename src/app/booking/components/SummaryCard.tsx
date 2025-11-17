@@ -1,5 +1,5 @@
 import Button from '@/components/Button'
-import React, { useMemo, useState, useEffect, useCallback } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { calculateNights, calculateTotalPrice } from '@/lib/helper'
 
 interface SummaryCardProps {

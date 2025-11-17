@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Form from './Form'
 import Button from '@/components/Button'
 import { GuestInfo } from './BookingSummary'
