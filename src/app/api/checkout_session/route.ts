@@ -2,21 +2,20 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-10-29.clover', // Using the expected API version
+  apiVersion: '2025-10-29.clover',
 });
 
 export async function POST(request: Request) {
   try {
     const { items } = await request.json();
 
-    // Build line items for Stripe
     const line_items = items.map((item: any) => ({
       price_data: {
-        currency: 'huf',  // Hungarian Forint
+        currency: 'huf',
         product_data: {
           name: item.name,
         },
-        unit_amount: item.price, // amount in HUF (no decimals, e.g., 1000 = 1000 HUF)
+        unit_amount: item.price,
       },
       quantity: item.quantity,
     }));
@@ -28,7 +27,7 @@ export async function POST(request: Request) {
       mode: 'payment',
       success_url: `${origin}/success`,
       cancel_url: `${origin}/cancel`,
-      locale: 'hu', // Hungarian
+      locale: 'hu',
     });
 
     return NextResponse.json({ url: session.url });

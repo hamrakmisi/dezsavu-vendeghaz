@@ -71,8 +71,17 @@ export async function getReservationById(id: number): Promise<Reservation> {
 export async function updateReservationStatus(reservationId: number, statusId: BookingStatus) {
   await pool.query<ResultSetHeader>(`
     UPDATE reservations
-    SET statusId = ?
+    SET statusId = ?, updatedAt = NOW()
     WHERE id = ?
   `, [statusId, reservationId]);
+}
+
+export async function deleteExpiredPendingReservations(): Promise<number> {
+  const [result] = await pool.query<ResultSetHeader>(`
+    DELETE FROM reservations
+    WHERE statusId = ?
+    AND createdAt < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+  `, [BookingStatus.PENDING_PAYMENT]);
+  return result.affectedRows;
 }
 
