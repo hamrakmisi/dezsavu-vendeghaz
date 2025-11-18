@@ -66,7 +66,7 @@ export default function FormModal({open, setOpen, reserveBooking, isLoading, gue
   function handleContinueClick() {
     validate()
     
-    if (errors.name || errors.email || errors.phone || !errors.termsAndConditionsChecked) {
+    if (errors.name || errors.email || errors.phone || errors.termsAndConditionsChecked === false) {
       return
     }
     

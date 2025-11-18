@@ -77,9 +77,9 @@ export default function BookingSummary() {
       const data = await response.json();
       
       if (response.ok) {
+        router.push(`/checkout?reservationId=${data.data}`)
         setIsLoading(false)
         setIsModalOpen(false);
-        router.push(`/checkout?reservationId=${data.data}`)
       } else {
         console.error('Booking failed:', data);
         setIsLoading(false)
