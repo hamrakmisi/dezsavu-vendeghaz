@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import TermsAndConditionsModal from './TermsAndConditionsModal'
 import { ErrorInfo } from './FormModal'
 import { GuestInfo } from "./BookingSummary";

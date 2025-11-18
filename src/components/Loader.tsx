@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function Loader({color}: {color: string}) {
   return (
     <div className="spinner-wave">

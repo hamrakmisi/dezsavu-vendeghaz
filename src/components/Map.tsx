@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function Map() {
   return (
     <div className="w-[95%] h-[450px] border rounded-lg overflow-hidden mx-auto my-10">

@@ -1,11 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import DateSelector from './DateSelector'
 import SummaryCard from './SummaryCard'
 import FormModal from './FormModal'
 import { toLocalISOString } from '@/lib/helper'
 import DiscountModal from './DiscountModal'
+import { useRouter } from 'next/navigation'
 
 export interface GuestInfo {
   name: string;
@@ -25,6 +26,8 @@ export default function BookingSummary() {
     email: '',
     phone: '',
   })
+
+  const router = useRouter()
 
   function handleDateClick(day: number, monthOffset: number, currentMonth: Date) {
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, day)
@@ -74,7 +77,7 @@ export default function BookingSummary() {
       const data = await response.json();
       
       if (response.ok) {
-        console.log('Booking successful:', data);
+        router.push(`/checkout?reservationId=${data.data}`)
         setIsLoading(false)
         setIsModalOpen(false);
       } else {

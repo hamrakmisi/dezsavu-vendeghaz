@@ -31,7 +31,7 @@ export async function createBooking(bookingData: BookingData) {
     throw new Error('Final price is null');
   }
 
-  await insertReservation({
+  const reservationId = await insertReservation({
     userId: user.id,
     nights,
     checkInDate: new Date(bookingData.checkInDate),
@@ -40,4 +40,6 @@ export async function createBooking(bookingData: BookingData) {
     discountId: discountId,
     total: finalPrice
   })
+
+  return reservationId;
 }
