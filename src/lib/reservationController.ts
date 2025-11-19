@@ -9,10 +9,6 @@ interface GetReservationsParams {
  }
 
 export async function getReservations(params: GetReservationsParams): Promise<Reservation[]> {
-  // if (params.id) {
-  //   TODO: getby id
-  // }
-  
   if (params.from && params.to) {
     return getReservationsByDateRange(params.from, params.to);
   }
