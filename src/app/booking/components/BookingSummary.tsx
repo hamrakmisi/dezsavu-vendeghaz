@@ -119,6 +119,16 @@ export default function BookingSummary() {
             Törlés
           </div>
         )}
+        <div className="flex flex-col mt-6 text-[60%]">
+          <span className="flex items-center gap-2">
+            <span className="dot bg-[#6ECFF6]"></span>
+            <span>Csak távozási dátumok</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="dot bg-[#7ED957]"></span>
+            <span>Csak érkezési dátumok</span>
+          </span>
+        </div>
       </div>
       <div className="col-span-1 bg-white/60 rounded-lg mt-4 lg:mt-0 p-6 shadow-lg">
         <SummaryCard

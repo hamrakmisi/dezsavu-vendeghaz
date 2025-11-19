@@ -1,5 +1,5 @@
 export function calculateNights(checkInDate: Date, checkOutDate: Date) {
-  return checkOutDate.getDate() - checkInDate.getDate()
+  return Math.round((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))
 }
 
 export function calculateTotalPrice(nights: number, pricePerNight: number, discount: number | null) {
