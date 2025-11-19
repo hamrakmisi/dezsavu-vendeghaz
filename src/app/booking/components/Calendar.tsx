@@ -36,26 +36,26 @@ export default function Calendar({
     
     const fetchReservations = async () => {
       try {
-        const response = await getReservations({
+        const localResponse = await getReservations({
           from: currentMonth,
           to: requestMonth
         });
         
-        return response.data;
+        const airbnbResponse = await getAirbnbReservations();
+
+        return [...localResponse.data, ...airbnbResponse.data];
       } catch (error) {
         console.error('Failed to fetch reservations:', error);
       }
     };
 
     fetchReservations().then((reservations) => {
-      const newBookedDates = reservations.flatMap((reservation: Reservation) => {
+      const newBookedDates = (reservations as Reservation[]).flatMap((reservation: Reservation) => {
         return {
           checkInDate: new Date(new Date(reservation.checkInDate).setHours(0, 0, 0, 0)),
           checkOutDate: new Date(new Date(reservation.checkOutDate).setHours(0, 0, 0, 0))
         }
       });
-
-      console.log(newBookedDates);
 
       setBookedDates((prev: { checkInDate: Date; checkOutDate: Date; }[]) => {
         const allDates = [...prev, ...newBookedDates];
@@ -83,6 +83,21 @@ export default function Calendar({
       });
       
       const response = await fetch(`/api/bookings?${params.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching reservations:', error);
+      return [];
+    }
+  }
+
+  async function getAirbnbReservations() {
+    try {
+      const response = await fetch('/api/iCal');
       
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);

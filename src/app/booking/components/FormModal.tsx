@@ -60,17 +60,30 @@ export default function FormModal({open, setOpen, reserveBooking, isLoading, gue
       currentErrors.termsAndConditionsChecked = false
     }
     
-    setErrors(currentErrors)
+    return currentErrors
   }
 
   function handleContinueClick() {
-    validate()
+    const currentErrors = validate()
     
-    if (errors.name || errors.email || errors.phone || errors.termsAndConditionsChecked === false) {
+    if (currentErrors.name || currentErrors.email || currentErrors.phone || currentErrors.termsAndConditionsChecked === false) {
+      setErrors(currentErrors)
       return
     }
     
     reserveBooking()
+  }
+
+  function disableContinueButton() {
+    if (isLoading) {
+      return true
+    }
+
+    if (!guestInfo.name || !guestInfo.email || !guestInfo.phone || !termsAndConditionsChecked) {
+      return true
+    }
+
+    return false
   }
   
   return (
@@ -96,7 +109,7 @@ export default function FormModal({open, setOpen, reserveBooking, isLoading, gue
               variant="primary"
               className="font-bold"
               isLoading={isLoading}
-              disabled={isLoading}
+              disabled={disableContinueButton()}
             />
           </div>
         </div>
