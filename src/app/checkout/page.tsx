@@ -1,13 +1,13 @@
 import Checkout from '../../components/stripeCheckout'
 
-export default function Page({ searchParams }: {
+export default async function Page({ searchParams }: {
   searchParams: { reservationId: string }
 }) {
-  const reservationId = parseInt(searchParams.reservationId)
+  const { reservationId } = await searchParams
 
   return (
     <div id="checkout">
-      <Checkout reservationId={reservationId} />
+      <Checkout reservationId={parseInt(reservationId)} />
     </div>
   )
 }

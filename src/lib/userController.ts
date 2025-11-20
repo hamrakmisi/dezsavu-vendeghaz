@@ -4,9 +4,17 @@ import { GuestInfo } from "@/app/booking/components/BookingSummary";
 import { getUserByEmail, createUser } from "./queries/users";
 
 export async function createOrGetUser(guestInfo: GuestInfo) {
-  const user = await getUserByEmail(guestInfo.email);
+  const normalizedGuestInfo = {
+    ...guestInfo,
+    email: guestInfo.email.replace(/\s+/g, ''),
+    phone: guestInfo.phone.replace(/\s+/g, ''),
+  };
 
-  if (user) return user;
+  const user = await getUserByEmail(normalizedGuestInfo.email);
 
-  return await createUser(guestInfo);
+  if (user) {
+    return user;
+  }
+
+  return await createUser(normalizedGuestInfo);
 }

@@ -35,10 +35,14 @@ export async function insertReservation(reservation: Reservation): Promise<numbe
 export async function getReservationsByDateRange(from: Date, to: Date): Promise<Reservation[]> {
   const [rows] = await pool.query<RowDataPacket[]>(`
     SELECT * FROM reservations
-    WHERE (checkInDate <= ? AND checkOutDate >= ?)
-    OR (checkInDate BETWEEN ? AND ?)
-    OR (checkOutDate BETWEEN ? AND ?)
-  `, [from, to, from, to, from, to]);
+    WHERE (
+      (checkInDate <= ? AND checkOutDate >= ?)
+      OR (checkInDate BETWEEN ? AND ?)
+      OR (checkOutDate BETWEEN ? AND ?)
+    )
+    AND statusId != ?
+  `, [from, to, from, to, from, to, BookingStatus.CANCELLED]);
+
   return rows.map((row: RowDataPacket) => ({
     id: row.id,
     userId: row.userId,
