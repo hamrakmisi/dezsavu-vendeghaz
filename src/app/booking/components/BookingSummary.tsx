@@ -78,8 +78,8 @@ export default function BookingSummary() {
       
       if (response.ok) {
         router.push(`/checkout?reservationId=${data.data}`)
-        setIsLoading(false)
         setIsModalOpen(false);
+        setIsLoading(false);
       } else {
         console.error('Booking failed:', data);
         setIsLoading(false)

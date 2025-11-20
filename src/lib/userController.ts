@@ -1,7 +1,7 @@
 'use server'
 
 import { GuestInfo } from "@/app/booking/components/BookingSummary";
-import { getUserByEmail, createUser } from "./queries/users";
+import { getUserByEmail, createUser, updateUserById } from "./queries/users";
 
 export async function createOrGetUser(guestInfo: GuestInfo) {
   const normalizedGuestInfo = {
@@ -12,8 +12,12 @@ export async function createOrGetUser(guestInfo: GuestInfo) {
 
   const user = await getUserByEmail(normalizedGuestInfo.email);
 
-  if (user) {
+  if (user && user.name === normalizedGuestInfo.name && user.phone === normalizedGuestInfo.phone) {
     return user;
+  }
+
+  if (user && (user.name !== normalizedGuestInfo.name || user.phone !== normalizedGuestInfo.phone)) {
+    return await updateUserById(user.id, normalizedGuestInfo);
   }
 
   return await createUser(normalizedGuestInfo);
