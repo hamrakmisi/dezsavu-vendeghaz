@@ -72,13 +72,23 @@ export async function getReservationById(id: number): Promise<Reservation> {
   }))[0];
 }
 
-export async function updateReservationStatus(reservationId: number, statusId: BookingStatus) {
+export async function updateReservationStatusById(reservationId: number, statusId: BookingStatus) {
   await pool.query<ResultSetHeader>(`
     UPDATE reservations
     SET statusId = ?, updatedAt = NOW()
     WHERE id = ?
   `, [statusId, reservationId]);
 }
+
+export async function updateReservationStatusByCheckOutDate(date: Date, statusId: BookingStatus) {
+  await pool.query<ResultSetHeader>(`
+    UPDATE reservations
+    SET statusId = ?, updatedAt = NOW()
+    WHERE checkOutDate <= ?
+    AND statusId NOT IN (?, ?)
+  `, [statusId, date, statusId, BookingStatus.CANCELLED]);
+}
+
 
 export async function deleteExpiredPendingReservations(): Promise<number> {
   const [result] = await pool.query<ResultSetHeader>(`

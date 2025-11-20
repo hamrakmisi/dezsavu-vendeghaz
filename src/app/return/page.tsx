@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 
 import { stripe } from '../../lib/stripe'
 import Button from '@/components/Button';
-import { updateReservationStatus } from '@/lib/queries/reservations';
+import { updateReservationStatusById } from '@/lib/queries/reservations';
 import { BookingStatus } from '@/lib/types';
 
 export default async function Return({ searchParams }: { searchParams: any }) {
@@ -26,7 +26,7 @@ export default async function Return({ searchParams }: { searchParams: any }) {
   }
 
   if (status === 'complete') {
-    await updateReservationStatus(Number(reservationId), BookingStatus.UPCOMING)
+    await updateReservationStatusById(Number(reservationId), BookingStatus.UPCOMING)
     return (
       <section id="success" className="w-[95%] h-[calc(100vh-20vh)] mx-auto pt-64 flex flex-col items-center gap-4">
         <p className="text-center">
