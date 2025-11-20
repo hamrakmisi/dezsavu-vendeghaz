@@ -99,3 +99,17 @@ export async function deleteExpiredPendingReservations(): Promise<number> {
   return result.affectedRows;
 }
 
+export async function checkReservation(checkInDate: Date, checkOutDate: Date): Promise<boolean> {
+  const [rows] = await pool.query<RowDataPacket[]>(`
+    SELECT * FROM reservations
+    WHERE (
+      (checkInDate < ? AND checkOutDate > ?)
+      OR (checkInDate > ? AND checkInDate < ?)
+      OR (checkOutDate > ? AND checkOutDate < ?)
+    )
+    AND statusId != ?
+  `, [checkInDate, checkOutDate, checkInDate, checkOutDate, checkInDate, checkOutDate, BookingStatus.CANCELLED]);
+  console.log(rows, checkInDate, checkOutDate);
+  return rows.length === 0;
+}
+

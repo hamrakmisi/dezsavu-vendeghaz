@@ -30,11 +30,11 @@ export default async function Return({ searchParams }: { searchParams: any }) {
     return (
       <section id="success" className="w-[95%] h-[calc(100vh-20vh)] mx-auto pt-64 flex flex-col items-center gap-4">
         <div className="max-w-[600px] mx-auto flex flex-col items-center gap-4 bg-white/60 rounded-lg mt-4 lg:mt-0 p-6 shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">Sikerült a foglalásod megerősítése!</h2>
+          <h2 className="text-2xl font-bold mb-4">Sikeres foglalás!</h2>
           <p className="text-center">
             Köszönjük hogy minket választott! A foglalásod megerősítését nemsokára a(z){' '}
-            {customerEmail} email címre küldjük. Ha bármilyen kérdésed van, kérlek keress minket{' '}
-            <a href="mailto:vendeghaz.dezsavu@gmail.com">vendeghaz.dezsavu@gmail.com</a>-on.
+            <b className="font-bold">{customerEmail}</b> email címre küldjük. Ha bármilyen kérdésed van, kérlek keress minket{' '}
+            <b className="font-bold">vendeghaz.dezsavu@gmail.com</b>-on.
           </p>
         </div>
         <Button

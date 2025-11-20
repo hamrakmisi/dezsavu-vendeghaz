@@ -5,7 +5,7 @@ import pool from "../pool";
 
 export async function getDiscountByCode(code: string) {
   const [rows] = await pool.query<RowDataPacket[]>(`
-    SELECT value FROM discounts where code = ?
+    SELECT value FROM discounts where code = ? and validFrom <= NOW() and validTo >= NOW()
   `,
   [code]
   );
@@ -15,7 +15,7 @@ export async function getDiscountByCode(code: string) {
 
 export async function getDiscountIdByValue(value: number) {
   const [rows] = await pool.query<RowDataPacket[]>(`
-    SELECT id FROM discounts where value = ?
+    SELECT id FROM discounts where value = ? and validFrom <= NOW() and validTo >= NOW()
   `,
   [value]
   );

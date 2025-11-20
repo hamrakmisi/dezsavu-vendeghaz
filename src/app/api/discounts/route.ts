@@ -18,7 +18,7 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: 'Nem található kedvezmény ezzel a kóddal.',
+          message: 'Nem található érvényes kedvezmény ezzel a kóddal.',
           error: 'Nem található a kód.'
         },
         { status: 404 }
