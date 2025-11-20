@@ -97,7 +97,7 @@ export default function Calendar({
 
   async function getAirbnbReservations() {
     try {
-      const response = await fetch('/api/iCal');
+      const response = await fetch('/api/iCal/import');
       
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
