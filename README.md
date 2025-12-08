@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Alkalmazás futtatása Dockerrel (Linux)
 
-## Getting Started
+Ez a dokumentum bemutatja, hogyan tudod elindítani és leállítani az alkalmazást Dockerrel egy Linux rendszeren, az \`env.js\` segédfájl használatával.
 
-First, run the development server:
+## Előfeltételek
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+A futtatáshoz az alábbiak szükségesek:
+
+- **Linux operációs rendszer**
+- **Docker** telepítve és futtatva  
+   Ellenőrzés:  
+  ```
+    docker --version
+  ```
+- **docker-compose** telepítve  
+   Ellenőrzés:  
+  ```
+  docker-compose --version
+  ```
+
+Ha ezek nincsenek telepítve, először telepítsd őket a disztribúciód csomagkezelőjével vagy a Docker hivatalos leírása alapján.
+
+## Környezeti változók – \`.env\` fájl
+
+Az alkalmazás megfelelő működéséhez szükség van egy **\`.env\`** fájlra a projekt gyökerében.  
+Ebben kell megadni többek között:
+
+### Stripe kulcsok a fizetéshez:
+- \`STRIPE_SECRET_KEY\`
+- \`NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY\`
+
+**Példa**:
+```env
+STRIPE_SECRET_KEY=sk_test_XXXXXXXXXXXXXXXXXXXXXXXX
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Adatbázis beállítások
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Az adatbázishoz szükséges környezeti változók szintén a \`.env\` fájlban szerepelnek, **de ezek neveit a \`docker-compose.yml\` fájlban tudod ellenőrizni vagy módosítani.**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Lépések:
+1. Nyisd meg a \`docker-compose.yml\` fájlt.
+2. Keresd meg az adatbázishoz kapcsolódó szolgáltatás(oka)t.
+3. Ellenőrizd az ott megadott környezeti változókat (pl. \`DB_HOST\`, \`DB_USER\`, \`DB_PASSWORD\`, \`DB_NAME\` stb.).
+4. Add meg őket a \`.env\` fájlban.
 
-## Learn More
+**Példa:**
+```env
+DB_HOST=db
+DB_USER=app_user
+DB_PASSWORD=valami_jelszo
+DB_NAME=app_database
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## \`env.js\` futtatható fájl
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Az alkalmazás indítása és kezelése az **\`env.js\`** futtatható fájlon keresztül történik, amely **csak Linuxon fut**.
 
-## Deploy on Vercel
+Győződj meg róla, hogy a fájl futtatható:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+chmod +x env.js
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ezután az alábbi parancsokkal tudod használni (a projekt gyökérkönyvtárából):
+
+### Alkalmazás indítása és belépés a webalkalmazás konténer shelljébe
+```
+./env.js run
+```
+- Elindítja a konténereket
+- Beléptet a webalkalmazás konténer shelljébe
+
+### Build + futtatás
+```
+./env.js run --build
+```
+- Újraépíti az image-eket
+- Elindítja a konténereket
+- Beléptet a webalkalmazás konténer shelljébe
+
+### Futó konténerek listázása (status)
+```bash
+./env.js status
+```
+- Gyakorlatilag a \`docker ps\`-t hívja  
+- Visszaadja a futó konténereket
+
+### Minden leállítása
+```bash
+./env.js down
+```
+- Leállítja a docker-compose által indított konténereket
+
+---
+
+
+## Rövid összefoglaló
+
+1. Telepítsd a **Docker**-t és a **docker-compose**-t Linuxon.
+2. Állítsd be a futtathatóságot az \`env.js\` fájlon:  
+   ```bash
+   chmod +x env.js
+   ```
+3. Töltsd ki a \`.env\` fájlt (Stripe + adatbázis adatok).
+4. Indítás:  
+   ```bash
+   ./env.js run
+   ```
+5. Új build:  
+   ```bash
+   ./env.js run --build
+   ```
+6. Állapot lekérdezése:  
+   ```bash
+   ./env.js status
+   ```
+7. Leállítás:  
+   ```bash
+   ./env.js down
+   ```
+
