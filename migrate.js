@@ -80,7 +80,9 @@ async function runMigrations() {
       CREATE TABLE IF NOT EXISTS discounts (
         id INT AUTO_INCREMENT PRIMARY KEY,
         value INT NOT NULL,
-        code VARCHAR(255) NOT NULL UNIQUE
+        code VARCHAR(255) NOT NULL UNIQUE,
+        validFrom DATE NOT NULL,
+        validTo DATE NOT NULL,
       )
     `);
 
@@ -121,8 +123,8 @@ async function runMigrations() {
     `);
 
     await connection.query(`
-      INSERT IGNORE INTO discounts (value, code)
-      SELECT 10, 'TEN' WHERE NOT EXISTS (SELECT 1 FROM discounts WHERE value = 10 AND code = 'TEN')
+      INSERT IGNORE INTO discounts (value, code, validFrom, validTo)
+      SELECT 10, 'TEN', '2025-01-01', '2027-01-01' WHERE NOT EXISTS (SELECT 1 FROM discounts WHERE value = 10 AND code = 'TEN')
     `);
 
     const insertIfNotExists = async (table, values) => {

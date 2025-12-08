@@ -75,11 +75,19 @@ export default function BookingSummary() {
       });
 
       const data = await response.json();
+
+      if (data.error?.notAvailable) {
+        alert('A foglalás folyamata közben a kiválasztott időpontra időközben más vendég érkezett, így az már nem elérhető. Kérjük, frissítsd az oldalt, majd válassz egy másik időpontot, és próbáld meg újra.')
+        router.refresh()
+        setIsLoading(false)
+        setIsModalOpen(false)
+        return
+      }
       
       if (response.ok) {
         router.push(`/checkout?reservationId=${data.data}`)
-        setIsLoading(false)
         setIsModalOpen(false);
+        setIsLoading(false);
       } else {
         console.error('Booking failed:', data);
         setIsLoading(false)

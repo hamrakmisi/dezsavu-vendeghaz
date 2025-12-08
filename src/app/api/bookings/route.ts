@@ -3,15 +3,31 @@
 import { createBooking } from '@/lib/bokingController';
 import { NextResponse } from 'next/server';
 import { getReservations } from '@/lib/reservationController';
+import { checkAvailability } from '@/lib/reservationController';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+
+    const isAvailable = await checkAvailability(new Date(body.checkInDate), new Date(body.checkOutDate));
+
+    if (!isAvailable) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'A kiválasztott időszak nem érhető el.',
+          error: {
+            notAvailable: true
+          }
+        },
+        { status: 400 }
+      );
+    }
     
     const reservationId = await createBooking(body)
     
     return NextResponse.json(
-      { 
+      {
         success: true,
         message: 'Foglalás sikeresen rögzítve!',
         data: reservationId
@@ -22,7 +38,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error processing booking:', error);
     return NextResponse.json(
-      { 
+      {
         success: false, 
         message: 'Hiba történt a foglalás során.',
         error: error instanceof Error ? error.message : 'Ismeretlen hiba'

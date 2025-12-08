@@ -2,12 +2,13 @@
 
 import { headers } from 'next/headers'
 import { stripe } from '../../lib/stripe'
-import { getReservationById } from '../../lib/queries/reservations'
+import { getReservations } from '../../lib/reservationController'
+import { Reservation } from '../../lib/queries/reservations'
 
 export async function fetchClientSecret(reservationId: number): Promise<string> {
   const origin = (await headers()).get('origin')
 
-  const reservation = await getReservationById(reservationId)
+  const reservation = await getReservations({ id: reservationId }) as Reservation
 
   const price = await stripe.prices.create({
     unit_amount: reservation.total*100,

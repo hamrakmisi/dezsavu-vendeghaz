@@ -38,3 +38,23 @@ export async function createUser(guestInfo: GuestInfo): Promise<User> {
     phone: guestInfo.phone,
   };
 }
+
+export async function updateUserById(id: number, guestInfo: GuestInfo): Promise<User> {
+  try {
+    await pool.query<RowDataPacket[]>(`
+      UPDATE users
+      SET name = ?, phone = ?, updatedAt = NOW()
+      WHERE id = ?
+    `, [guestInfo.name, guestInfo.phone, id]);
+  } catch (error) {
+    console.error('Failed to update user:', error);
+    throw error;
+  }
+
+  return {
+    id: id,
+    email: guestInfo.email,
+    name: guestInfo.name,
+    phone: guestInfo.phone,
+  };
+}

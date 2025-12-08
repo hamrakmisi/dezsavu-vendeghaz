@@ -72,13 +72,23 @@ export async function getReservationById(id: number): Promise<Reservation> {
   }))[0];
 }
 
-export async function updateReservationStatus(reservationId: number, statusId: BookingStatus) {
+export async function updateReservationStatusById(reservationId: number, statusId: BookingStatus) {
   await pool.query<ResultSetHeader>(`
     UPDATE reservations
     SET statusId = ?, updatedAt = NOW()
     WHERE id = ?
   `, [statusId, reservationId]);
 }
+
+export async function updateReservationStatusByCheckOutDate(date: Date, statusId: BookingStatus) {
+  await pool.query<ResultSetHeader>(`
+    UPDATE reservations
+    SET statusId = ?, updatedAt = NOW()
+    WHERE checkOutDate <= ?
+    AND statusId NOT IN (?, ?)
+  `, [statusId, date, statusId, BookingStatus.CANCELLED]);
+}
+
 
 export async function deleteExpiredPendingReservations(): Promise<number> {
   const [result] = await pool.query<ResultSetHeader>(`
@@ -87,5 +97,19 @@ export async function deleteExpiredPendingReservations(): Promise<number> {
     AND createdAt < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
   `, [BookingStatus.PENDING_PAYMENT]);
   return result.affectedRows;
+}
+
+export async function checkReservation(checkInDate: Date, checkOutDate: Date): Promise<boolean> {
+  const [rows] = await pool.query<RowDataPacket[]>(`
+    SELECT * FROM reservations
+    WHERE (
+      (checkInDate < ? AND checkOutDate > ?)
+      OR (checkInDate > ? AND checkInDate < ?)
+      OR (checkOutDate > ? AND checkOutDate < ?)
+    )
+    AND statusId != ?
+  `, [checkInDate, checkOutDate, checkInDate, checkOutDate, checkInDate, checkOutDate, BookingStatus.CANCELLED]);
+  console.log(rows, checkInDate, checkOutDate);
+  return rows.length === 0;
 }
 
