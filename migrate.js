@@ -38,9 +38,9 @@ async function runMigrations() {
 
   try {
     console.log('Starting database migrations...');
-    
+
     await waitForDatabase();
-    
+
     connection = await mysql.createConnection({
       host: dbConfig.host,
       port: dbConfig.port,
@@ -82,7 +82,7 @@ async function runMigrations() {
         value INT NOT NULL,
         code VARCHAR(255) NOT NULL UNIQUE,
         validFrom DATE NOT NULL,
-        validTo DATE NOT NULL,
+        validTo DATE NOT NULL
       )
     `);
 

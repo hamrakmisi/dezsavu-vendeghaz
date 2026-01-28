@@ -7,7 +7,7 @@ module.exports = {
     "./.storybook/**/*.{js,ts,jsx,tsx}",
     "./stories/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
+  darkMode: false,
   safelist: [
     { pattern: /^(btn|card|link|badge|input|modal|dropdown|toast)(-.+)?$/ },
   ],
@@ -29,13 +29,8 @@ module.exports = {
           colorScheme: "light",
         },
         {
-          themeName: "dark",
-          colorScheme: "dark",
-        },
-        {
           themeName: "custom",
           colorScheme: "light",
-          prefersColorScheme: true,
           colors: {
             primary: "#F0A202",
           },
