@@ -70,6 +70,14 @@ async function runMigrations() {
     `);
 
     await connection.query(`
+      CREATE TABLE IF NOT EXISTS admin (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL
+      )
+    `);
+
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS price (
         id INT AUTO_INCREMENT PRIMARY KEY,
         value INT NOT NULL

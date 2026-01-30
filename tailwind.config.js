@@ -27,14 +27,10 @@ module.exports = {
         {
           themeName: "light",
           colorScheme: "light",
-        },
-        {
-          themeName: "custom",
-          colorScheme: "light",
           colors: {
             primary: "#F0A202",
           },
-        }
+        },
       ],
     }),
   ],

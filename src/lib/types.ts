@@ -9,3 +9,9 @@ export enum UserRole {
   GUEST = 1,
   ADMIN = 2
 }
+
+export interface AdminUser {
+  id: number;
+  username: string;
+  password_hash: string;
+}

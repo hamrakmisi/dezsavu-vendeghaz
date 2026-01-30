@@ -9,6 +9,7 @@ export default function NavBar() {
   const router = useRouter()
   
   const itemClass = `
+    text-black
     navbar-item hover:scale-105
     transition-transform duration-200 cursor-pointer
   `
