@@ -15,3 +15,23 @@ export interface AdminUser {
   username: string;
   password_hash: string;
 }
+
+export interface DashboardData {
+  reservationCount: number;
+  avgLength: number;
+  medianLength: number;
+  pricePerNight: number;
+  returningCustomerPercentage: number;
+  cancelledCount: number;
+  pendingCount: number;
+  completedCount: number;
+}
+
+export enum DashboardFilterType {
+  THIS_MONTH = 'Ez a hónap',
+  LAST_MONTH = 'Előző hónap',
+  LAST_6_MONTHS = 'Előző 6 hónap',
+  LAST_12_MONTHS = 'Előző 12 hónap',
+  THIS_YEAR = 'Ez az év',
+  ALL = 'Összes'
+}

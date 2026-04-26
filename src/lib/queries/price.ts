@@ -11,3 +11,9 @@ export async function getPrice() {
 
   return rows[0].value;
 }
+
+export async function updatePrice(price: number) {
+  await pool.query<RowDataPacket[]>(`
+    UPDATE price SET value = ? WHERE id = 1
+  `, [price]);
+}

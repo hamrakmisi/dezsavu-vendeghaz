@@ -1,18 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function DashboardWrapper({ children }: { children: React.ReactNode }) {
-  const [timeRange, setTimeRange] = useState('1M');
-
-  const ranges = ['1M', '6M', '1Y', '5Y', 'Mind'];
+export default function DashboardWrapper({ children, timeRange, setTimeRange, ranges }: { children: React.ReactNode, timeRange: string, setTimeRange: (timeRange: string) => void, ranges: string[] }) {
 
   return (
-    <div className="p-6 space-y-6 h-screen flex flex-col justify-center">
-      <div className="flex justify-between items-center">
+    <div className="p-6 space-y-6 py-48 flex flex-col justify-center">
+      <div className="flex justify-between items-center flex-col md:flex-row">
         <h1 className="text-3xl font-bold">Irányítópult</h1>
-
-        <div className="btn-group btn-group-scrollable">
+        <div className="btn-group">
           {ranges.map((range) => (
             <button
               key={range}
@@ -25,7 +21,7 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
         {children}
       </div>
     </div>

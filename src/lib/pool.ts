@@ -1,16 +1,22 @@
-import { createPool } from 'mysql2/promise'
+import { createPool, Pool } from 'mysql2/promise';
 
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '3306'),
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'szigetvar_vendeghaz',
-  waitForConnections: true,
-  connectionLimit: 25,
-  queueLimit: 0
-};
+declare global {
+  var _pool: Pool | undefined;
+}
 
-const pool = createPool(dbConfig);
+const pool =
+  global._pool ??
+  createPool({
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '3306'),
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'szigetvar_vendeghaz',
+    waitForConnections: true,
+    connectionLimit: 25,
+    queueLimit: 0,
+  });
+
+if (!global._pool) global._pool = pool;
 
 export default pool;
